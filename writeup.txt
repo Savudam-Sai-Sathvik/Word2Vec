@@ -1,0 +1,39 @@
+2
+Even though I have taken help from the following students and LLMs in terms of discussing ideas and coding practices, all my code is written by me.
+ChatGPT (LLM)
+
+Approach and Methodology
+------------------------
+This project addresses author attribution using a combination of semantic and stylometric features. The core idea is to capture both what an author writes (lexical choice) and how an author writes (style).
+
+Semantic Representation:
+Word2Vec embeddings were trained from scratch on the provided training corpus using the Skip-gram model with negative sampling. Each word is represented in a continuous vector space, capturing contextual usage patterns. Sentence- and chunk-level embeddings are computed using a TF-IDF weighted average of word embeddings, which helps emphasize discriminative words while suppressing common terms.
+
+Stylometric Features:
+In addition to semantic embeddings, several hand-crafted stylistic features were extracted, including:
+- Mean and variance of sentence length
+- Mean and variance of word length
+- Normalized punctuation frequency
+- Semicolon count
+- Comma count
+
+These features capture author-specific writing habits that are often independent of topic.
+
+Task 1: Author Verification / Ranking
+For Task 1, query chunks are compared against candidate author chunks using cosine similarity on normalized feature vectors. Semantic and stylometric features are combined using a weighted linear combination, with higher emphasis placed on semantic embeddings and a smaller weight assigned to stylistic features.
+
+Task 2: Author Clustering
+For Task 2, the same combined feature representation is used for clustering text chunks. K-means clustering with constraints is applied to ensure a minimum number of chunks per author cluster. Feature vectors are normalized prior to clustering to ensure cosine similarity dominates the distance metric.
+
+Hyperparameters:
+- Word2Vec embedding dimension: 100
+- Context window size: 5
+- Negative samples: 5
+- Minimum word count: 3
+- Training epochs: 5
+- Learning rate: 0.005
+- Feature combination: 85% semantic, 15% stylistic
+
+Additional Notes:
+All models were trained using PyTorch. Validation loss was used only as a diagnostic tool, while final evaluation was performed using Mean Reciprocal Rank (MRR) and clustering accuracy on downstream tasks.
+
